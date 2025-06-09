@@ -1,0 +1,109 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id          String    @id @default(uuid()) @map("id") @db.Uuid
+  email       String    @unique
+  password    String    
+  createdAt   DateTime  @default(now()) @map("created_at")
+
+  workspaces  Workspace[] @relation("WorkspaceOwner")
+  memberships UserWorkspaceMembership[]
+  usageLogs   UsageLog[]
+
+  @@map("users")
+}
+
+model Workspace {
+  id        String    @id @default(uuid()) @map("id") @db.Uuid
+  name      String
+  ownerId   String    @map("owner_id") @db.Uuid
+  createdAt DateTime  @default(now()) @map("created_at")
+
+  owner     User      @relation("WorkspaceOwner", fields: [ownerId], references: [id])
+  members   UserWorkspaceMembership[]
+  channels  Channel[]
+  messages  Message[]
+  usageLogs UsageLog[]
+
+  @@map("workspaces")
+}
+
+model UserWorkspaceMembership {
+  id          String    @id @default(uuid()) @map("id") @db.Uuid
+  userId      String    @map("user_id") @db.Uuid
+  workspaceId String    @map("workspace_id") @db.Uuid
+  role        String    @default("member") @db.VarChar(50)
+  createdAt   DateTime  @default(now()) @map("created_at")
+
+  user        User      @relation(fields: [userId], references: [id])
+  workspace   Workspace @relation(fields: [workspaceId], references: [id])
+
+  @@unique([userId, workspaceId])
+  @@map("user_workspace_membership")
+}
+
+model Channel {
+  id           String    @id @default(uuid()) @map("id") @db.Uuid
+  platform     String    @db.VarChar(50)
+  workspaceId  String    @map("workspace_id") @db.Uuid
+  accessToken  String    @map("access_token")
+  refreshToken String?   @map("refresh_token")
+  expiresAt    DateTime? @map("expires_at")
+  connectedAt  DateTime  @default(now()) @map("connected_at")
+
+  workspace    Workspace @relation(fields: [workspaceId], references: [id])
+  messages     Message[]
+
+  @@unique([platform, workspaceId])
+  @@map("channels")
+}
+
+model Message {
+  id           String    @id @default(uuid()) @map("id") @db.Uuid
+  workspaceId  String    @map("workspace_id") @db.Uuid
+  channelId    String    @map("channel_id") @db.Uuid
+  platform     String    @db.VarChar(50)
+  senderId     String    @map("sender_id")
+  senderName   String?   @map("sender_name")
+  messageBody  String    @map("message_body") @db.Text
+  direction    String    @db.VarChar(50)
+  timestamp    DateTime  @default(now())
+  aiResponse   String?   @map("ai_response") @db.Text
+  aiTags       String[]  @map("ai_tags") @db.Text
+  aiConfidence Decimal?    @map("ai_confidence") @db.Decimal(5,2)
+  isRead       Boolean   @default(false) @map("is_read")
+  isHandled    Boolean   @default(false) @map("is_handled")
+
+  workspace    Workspace @relation(fields: [workspaceId], references: [id])
+  channel      Channel   @relation(fields: [channelId], references: [id])
+
+  @@map("messages")
+}
+
+model UsageLog {
+  id          String    @id @default(uuid()) @map("id") @db.Uuid
+  workspaceId String    @map("workspace_id") @db.Uuid
+  userId      String?   @map("user_id") @db.Uuid
+  type        String    @db.VarChar(50)
+  count       Int       @default(1)
+  logDate     DateTime  @default(now()) @db.Date @map("log_date")
+  createdAt   DateTime  @default(now()) @map("created_at")
+
+  workspace   Workspace @relation(fields: [workspaceId], references: [id])
+  user        User?     @relation(fields: [userId], references: [id])
+
+  @@map("usage_logs")
+}

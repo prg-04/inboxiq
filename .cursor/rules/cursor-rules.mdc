@@ -1,0 +1,128 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# InboxIQ Cursor Rules
+
+## Overview
+These cursor rules are designed for the InboxIQ project, utilizing Next.js, React, Tailwind CSS, Supabase, and Radix UI. The goal is to provide clear, performant, and consistent cursor interactions across the application.
+
+## Technology Stack Considerations
+- **Framework**: Next.js (App Router)
+- **Styling**: Tailwind CSS
+- **UI Components**: Radix UI, ShadCN UI
+- **Authentication**: Supabase
+
+## Cursor Rule Categories
+
+### 1. Interactive Elements
+- **Buttons (Primary, Secondary, Tertiary)**
+  - Use `cursor-pointer` for all clickable buttons
+  - Disabled buttons: `cursor-not-allowed`
+  - Example: [Button Component](mdc:apps/web/components/ui/button.tsx)
+  ```typescript
+  // Tailwind CSS cursor classes
+  className={`
+    ${isDisabled ? 'cursor-not-allowed opacity-50' : 'cursor-pointer hover:opacity-90'}
+  `}
+  ```
+
+### 2. Form Interactions
+- **Text Inputs**
+  - Use `cursor-text` for editable text fields
+  - Disabled inputs: `cursor-not-allowed`
+  - Example: [Input Component](mdc:apps/web/components/ui/input.tsx)
+  ```typescript
+  className={`
+    cursor-text 
+    ${isDisabled ? 'cursor-not-allowed text-gray-400' : ''}
+  `}
+  ```
+
+### 3. Authentication Flows
+- **Login/Signup Pages**
+  - Buttons during submission: `cursor-progress`
+  - Example: [Login Page](mdc:apps/web/app/auth/login/page.tsx)
+  ```typescript
+  <Button 
+    type="submit" 
+    disabled={isSubmitting}
+    className={isSubmitting ? 'cursor-progress' : 'cursor-pointer'}
+  >
+    {isSubmitting ? 'Signing In...' : 'Sign In'}
+  </Button>
+  ```
+
+### 4. Navigation and Interaction States
+- **Sidebar and Navigation**
+  - Menu items: `cursor-pointer`
+  - Active/Current page: Maintain `cursor-pointer` with visual indication
+  - Example: [Header Component](mdc:apps/web/components/layout/header.tsx)
+  ```typescript
+  <DropdownMenuItem 
+    className="cursor-pointer hover:bg-gray-100"
+    onSelect={handleMenuItemClick}
+  >
+    Profile Settings
+  </DropdownMenuItem>
+  ```
+
+### 5. Inbox and Email Interactions
+- **Email List Items**
+  - Hoverable: `cursor-pointer`
+  - Selected/Active Email: Special visual treatment
+  ```typescript
+  <div 
+    className={`
+      email-item 
+      ${isSelected ? 'bg-blue-50' : 'hover:bg-gray-50'}
+      cursor-pointer
+    `}
+  >
+    {/* Email content */}
+  </div>
+  ```
+
+### 6. Drag and Resize Interactions
+- **Draggable Components**
+  - Default state: `cursor-grab`
+  - Active dragging: `cursor-grabbing`
+  ```typescript
+  <div 
+    className={isDragging ? 'cursor-grabbing' : 'cursor-grab'}
+    onMouseDown={startDrag}
+    onMouseUp={endDrag}
+  >
+    {/* Draggable content */}
+  </div>
+  ```
+
+### 7. Loading and Async States
+- **Global Loading**
+  - Use `cursor-progress` sparingly
+  - Prefer localized loading indicators
+  ```typescript
+  {isLoading && (
+    <div className="fixed inset-0 bg-white/50 cursor-progress">
+      <Spinner />
+    </div>
+  )}
+  ```
+
+## Performance and Accessibility Considerations
+- Prioritize CSS-based cursor changes
+- Minimize JavaScript-driven cursor manipulations
+- Ensure sufficient color contrast for cursor states
+- Test across different devices and browsers
+
+## Implementation Guidelines
+1. Use Tailwind CSS utility classes for cursor states
+2. Combine cursor classes with other interactive state classes
+3. Provide clear visual feedback alongside cursor changes
+4. Test thoroughly across different interaction scenarios
+
+## Maintenance
+- Review and update these rules quarterly
+- Conduct user testing to validate cursor interaction effectiveness
+- Keep rules aligned with evolving design system and UX patterns
