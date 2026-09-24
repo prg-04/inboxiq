@@ -1,84 +1,72 @@
-# Turborepo starter
+# InboxIQ
 
-This Turborepo starter is maintained by the Turborepo core team.
+InboxIQ is a full-stack foundation for an **AI-powered social inbox**: a workspace where customer conversations from different channels can eventually be brought together, classified, and assisted with AI.
 
-## Using this example
+The repository is structured as a production-style TypeScript monorepo rather than a single Next.js application. It separates the web client, backend API, shared UI/configuration, and project documentation.
 
-Run the following command:
+## Current architecture
 
-```sh
-npx create-turbo@latest
+- **Web:** Next.js 15 + React 19 + TypeScript
+- **API:** NestJS 11
+- **Database layer:** Prisma
+- **Authentication / backend services:** Supabase
+- **Validation:** Zod, class-validator
+- **Styling:** Tailwind CSS + Radix UI
+- **Monorepo:** Turborepo + npm workspaces
+- **Testing:** Jest / Supertest on the API
+
+## What is currently in the repository
+
+- Authentication flows and protected application routes
+- An inbox-oriented web application structure
+- NestJS backend structure with authentication and user modules
+- Prisma integration for the backend data layer
+- Supabase integration
+- Shared UI, TypeScript, and ESLint packages
+- Separate documentation app
+- A project plan describing the planned multi-channel and AI capabilities
+
+## Repository structure
+
+```text
+apps/
+  web/       Next.js frontend
+  api/       NestJS backend
+  docs/      Documentation site
+
+packages/
+  ui/        Shared UI components
+  eslint-config/
+  typescript-config/
+
+project-plan.md
+turbo.json
 ```
 
-## What's inside?
+## Getting started
 
-This Turborepo includes the following packages/apps:
+Install dependencies:
 
-### Apps and Packages
-
-- `docs`: a [Next.js](https://nextjs.org/) app
-- `web`: another [Next.js](https://nextjs.org/) app
-- `@repo/ui`: a stub React component library shared by both `web` and `docs` applications
-- `@repo/eslint-config`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
-- `@repo/typescript-config`: `tsconfig.json`s used throughout the monorepo
-
-Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
-
-### Utilities
-
-This Turborepo has some additional tools already setup for you:
-
-- [TypeScript](https://www.typescriptlang.org/) for static type checking
-- [ESLint](https://eslint.org/) for code linting
-- [Prettier](https://prettier.io) for code formatting
-
-### Build
-
-To build all apps and packages, run the following command:
-
-```
-cd my-turborepo
-npm build
+```bash
+npm install
 ```
 
-### Develop
+Run the monorepo in development:
 
-To develop all apps and packages, run the following command:
-
-```
-cd my-turborepo
-npm dev
+```bash
+npm run dev
 ```
 
-### Remote Caching
+Run the main quality checks:
 
-> [!TIP]
-> Vercel Remote Cache is free for all plans. Get started today at [vercel.com](https://vercel.com/signup?/signup?utm_source=remote-cache-sdk&utm_campaign=free_remote_cache).
-
-Turborepo can use a technique known as [Remote Caching](https://turborepo.com/docs/core-concepts/remote-caching) to share cache artifacts across machines, enabling you to share build caches with your team and CI/CD pipelines.
-
-By default, Turborepo will cache locally. To enable Remote Caching you will need an account with Vercel. If you don't have an account you can [create one](https://vercel.com/signup?utm_source=turborepo-examples), then enter the following commands:
-
-```
-cd my-turborepo
-npx turbo login
+```bash
+npm run lint
+npm run check-types
+npm run build
 ```
 
-This will authenticate the Turborepo CLI with your [Vercel account](https://vercel.com/docs/concepts/personal-accounts/overview).
+Environment-specific credentials should be provided through the repository's `.env.example` files.
 
-Next, you can link your Turborepo to your Remote Cache by running the following command from the root of your Turborepo:
+## Status
 
-```
-npx turbo link
-```
-
-## Useful Links
-
-Learn more about the power of Turborepo:
-
-- [Tasks](https://turborepo.com/docs/crafting-your-repository/running-tasks)
-- [Caching](https://turborepo.com/docs/crafting-your-repository/caching)
-- [Remote Caching](https://turborepo.com/docs/core-concepts/remote-caching)
-- [Filtering](https://turborepo.com/docs/crafting-your-repository/running-tasks#using-filters)
-- [Configuration Options](https://turborepo.com/docs/reference/configuration)
-- [CLI Usage](https://turborepo.com/docs/reference/command-line-reference)
+InboxIQ is an **active MVP foundation**, not a finished SaaS product. The repository is intentionally documented around what is implemented today while keeping the longer-term multi-channel AI inbox roadmap in `project-plan.md`.
